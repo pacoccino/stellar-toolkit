@@ -1,0 +1,23 @@
+{
+  "name": "stellar-toolkit",
+  "version": "0.1.0",
+  "description": "High-level Stellar SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha src/**/*.spec.js"
+  },
+  "author": "Pacien Boisson <pakokrew@gmail.com> (https://ngfar.io)",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "crypto-js": "^3.1.9-1",
+    "decimal.js": "^7.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "qs": "^6.4.0",
+    "sinon": "^2.1.0",
+    "stellar-sdk": "^0.7.3",
+    "uuid": "^3.0.1"
+  }
+}
