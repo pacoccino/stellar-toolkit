@@ -140,7 +140,7 @@ const manageOffer = ({ selling, buying, amount, price, passive, id }) => {
       operations.push(Operation.manageOffer(offer));
     }
 
-    return transactionLauncher({ operation });
+    return transactionLauncher({ operations });
   } catch (e) {
     return Promise.reject(e);
   }
