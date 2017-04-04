@@ -1,14 +1,17 @@
 {
   "name": "stellar-toolkit",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "High-level Stellar SDK",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "babel src --presets babel-preset-latest --out-dir dist",
+    "prepublish": "npm run build",
     "test": "mocha src/**/*.spec.js"
   },
   "author": "Pacien Boisson <pakokrew@gmail.com> (https://ngfar.io)",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-latest": "^6.24.0",
     "chai": "^3.5.0",
     "crypto-js": "^3.1.9-1",
     "decimal.js": "^7.1.1",
@@ -19,5 +22,9 @@
     "sinon": "^2.1.0",
     "stellar-sdk": "^0.7.3",
     "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0"
   }
 }
