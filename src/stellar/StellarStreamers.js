@@ -1,5 +1,5 @@
 const { getServerInstance }  = require('./StellarServer');
-const { AssetInstance }  = require('./StellarTools');
+const { augmentAccount, AssetInstance }  = require('./StellarTools');
 
 const REFRESH_INTERVAL = 2000;
 const traceError = () => 0;
