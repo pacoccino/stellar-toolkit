@@ -19,13 +19,22 @@ const validDestination = address =>
 
 const AssetInstance = asset => {
   if(!asset) return null;
-  if(asset instanceof Asset) {
+  if(asset instanceof Asset || (asset.constructor && asset.constructor.name === 'Asset')) {
     return asset;
   }
   if(asset.asset_type === 'native') {
     return Asset.native();
   }
   return new Asset(asset.asset_code, asset.asset_issuer);
+};
+
+const AssetShortName = (rawAsset) => {
+  const asset = AssetInstance(rawAsset);
+
+  if(asset.isNative()) {
+    return 'XLM';
+  }
+  return asset.getCode();
 };
 
 const AssetUid = (rawAsset) => {
@@ -42,7 +51,7 @@ const AssetUid = (rawAsset) => {
 };
 
 const KeypairInstance = keypair => {
-  if(keypair instanceof Keypair) {
+  if(keypair instanceof Keypair || (keypair.constructor && keypair.constructor.name === 'Keypair')) {
     return keypair;
   }
   if(!!keypair.secretSeed) {
@@ -77,6 +86,8 @@ const augmentAccount = account => Object.assign({},
   {
     balances: account.balances.map(b => Object.assign({}, b, {
       asset: AssetInstance(b),
+      asset_uuid: AssetUid(b),
+      asset_shortname: AssetShortName(b),
     })),
   });
 

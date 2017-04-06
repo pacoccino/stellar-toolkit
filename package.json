@@ -1,9 +1,10 @@
 {
   "name": "stellar-toolkit",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "High-level Stellar SDK",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "npm run build -- -w",
     "build": "babel src --presets babel-preset-latest --out-dir dist",
     "prepublish": "npm run build",
     "test": "mocha src/**/*.spec.js"
