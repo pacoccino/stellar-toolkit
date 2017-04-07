@@ -1,6 +1,3 @@
-require("babel-polyfill");
-require("babel-core/register");
-
 const StellarAccountManager = require('./stellar/AccountManager');
 const StellarDataManager = require('./stellar/DataManager');
 const StellarOperations = require('./stellar/StellarOperations');
