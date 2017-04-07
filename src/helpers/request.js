@@ -20,10 +20,9 @@ function request(o) {
     options.body = JSON.stringify(o.body);
   }
 
-  console.log(uri, options)
   return fetch(uri, options)
     .then(response => {
-      if(response.headers.get('Content-Type') === 'application/json') {
+      if(response.headers.get('Content-Type').includes('application/json')) {
         return response.json();
       } else {
         return response.text();
