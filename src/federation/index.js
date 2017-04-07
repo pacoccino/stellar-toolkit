@@ -1,7 +1,11 @@
 const request = require('../helpers/request');
 const { sign } = require('../stellar/DataManager');
 
-const federationUrl = "https://stellar-wilson.herokuapp.com/federation";
+let federationUrl = "https://stellar-wilson.herokuapp.com/federation";
+
+function setUrl(url) {
+  federationUrl = url;
+}
 
 function federationResolve(stellar_address) {
   return request({
@@ -80,6 +84,7 @@ function federationDelete({ stellar_address, keypair }) {
 }
 
 module.exports = {
+  setUrl,
   federationResolve,
   federationReverse,
   federationKeypair,

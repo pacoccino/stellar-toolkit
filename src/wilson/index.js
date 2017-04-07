@@ -1,6 +1,10 @@
 const request = require('../helpers/request');
 
-const wilsonUrl = "https://stellar-wilson.herokuapp.com/wilson";
+let wilsonUrl = "https://stellar-wilson.herokuapp.com/wilson";
+
+function setUrl(url) {
+  wilsonUrl = url;
+}
 
 function anchorList() {
   return request({
@@ -47,6 +51,7 @@ function anchorWithdraw({ code, issuer, address }) {
 }
 
 module.exports = {
+  setUrl,
   anchorList,
   anchorInfo,
   anchorDeposit,
