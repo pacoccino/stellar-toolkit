@@ -43,63 +43,8 @@ const getExchangeRateFromOffers = ({
         rate: averagePrice,
       };
       return result;
-    });
-/*
-const getExchangeRateFrom = ({ sourceAsset, destinationAsset, sendMax }) =>
-  Orderbook({ buying: destinationAsset, selling: sourceAsset }).then(o => {
-    const offers = o.bids;
-    if(offers.length === 0) {
-      return RESULTS.NO_OFFERS;
-    }
-    let remaining = sendMax;
-    let i = 0;
-    let destinationAmount = 0;
-    while(remaining > 0 && i < offers.length) {
-      destinationAmount += Math.min(remaining, offers[i].amount) * offers[i].price;
-      remaining -= offers[i].amount;
-      i++;
-    }
-    if (remaining > 0) {
-      return RESULTS.NOT_ENOUGH_BIDS;
-    }
-    const averagePrice = destinationAmount / sendMax;
-    const result = {
-      sourceAsset: AssetInstance(sourceAsset),
-      destinationAsset: AssetInstance(destinationAsset),
-      sendMax,
-      destinationAmount,
-      rate: averagePrice,
-    };
-    return result;
-  });
-const getExchangeRateTo = ({ sourceAsset, destinationAsset, destinationAmount }) =>
-  Orderbook({ buying: destinationAsset, selling: sourceAsset }).then(o => {
-    const offers = o.bids;
-    if(offers.length === 0) {
-      return RESULTS.NO_OFFERS;
-    }
-    let remaining = destinationAmount;
-    let i = 0;
-    let sendMax = 0;
-    while(remaining > 0 && i < offers.length) {
-      sendMax += Math.min(remaining, offers[i].amount) / offers[i].price;
-      remaining -= offers[i].amount;
-      i++;
-    }
-    if (remaining > 0) {
-      return RESULTS.NOT_ENOUGH_BIDS;
-    }
-    const averagePrice = destinationAmount / sendMax;
-    const result = {
-      sourceAsset: AssetInstance(sourceAsset),
-      destinationAsset: AssetInstance(destinationAsset),
-      sendMax,
-      destinationAmount,
-      rate: averagePrice,
-    };
-    return result;
-  });
-*/
+    }).catch(e => RESULTS.NOT_ENOUGH_BIDS);
+
 const getPathSource = ({
   source, destination, destinationAsset, destinationAmount,
 }) =>
@@ -126,7 +71,8 @@ const getPathSource = ({
     })))
     .then(paths => paths.filter(p => p.sourceAsset.uuid !== p.destinationAsset.uuid))
     .then(paths => sortBy(paths, 'sendMax'))
-    .then(paths => uniqBy(paths, 'sourceAsset.uuid'));
+    .then(paths => uniqBy(paths, 'sourceAsset.uuid'))
+    .catch(e => RESULTS.NOT_ENOUGH_BIDS);
 
 const getExchangeRateFromAutoPath = ({ account_id, sourceAsset, destinationAsset, destinationAmount }) =>
   getPathSource({
@@ -141,7 +87,8 @@ const getExchangeRateFromAutoPath = ({ account_id, sourceAsset, destinationAsset
       sendMax: path.sendMax,
       destinationAmount,
       rate: path.rate,
-    }));
+    }))
+    .catch(e => RESULTS.NOT_ENOUGH_BIDS);
 
 function testEx() {
   const sourceAsset = {

@@ -17,6 +17,7 @@ module.exports = {
   StellarDataManager,
   StellarOperations,
   StellarServer,
+  StellarStats,
   StellarStreamers,
   StellarTools,
 

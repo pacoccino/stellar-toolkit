@@ -87,13 +87,13 @@ const sendPayment = ({ asset, destination, amount, memo }) => {
 };
 
 const sendPathPayment = ({
-                           asset_source,
-                           asset_destination,
-                           amount_destination,
-                           destination,
-                           max_amount,
-                           memo,
-                         }) => {
+  asset_source,
+  asset_destination,
+  amount_destination,
+  destination,
+  max_amount,
+  memo,
+}) => {
   try {
     const operation = Operation.pathPayment({
       sendAsset: AssetInstance(asset_source),
