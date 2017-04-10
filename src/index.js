@@ -2,6 +2,7 @@ const StellarAccountManager = require('./stellar/AccountManager');
 const StellarDataManager = require('./stellar/DataManager');
 const StellarOperations = require('./stellar/StellarOperations');
 const StellarServer = require('./stellar/StellarServer');
+const StellarStats = require('./stellar/StellarStats');
 const StellarStreamers = require('./stellar/StellarStreamers');
 const StellarTools = require('./stellar/StellarTools');
 

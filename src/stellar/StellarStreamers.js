@@ -4,6 +4,11 @@ const { augmentAccount, AssetInstance }  = require('./StellarTools');
 const REFRESH_INTERVAL = 2000;
 const traceError = () => 0;
 
+const getAccount = accountId =>
+  getServerInstance()
+    .loadAccount(accountId)
+    .then(augmentAccount);
+
 const paymentListener = ({
   accountId,
   onPayment = () => 0,
@@ -86,7 +91,15 @@ const PaymentStream = (accountId, onmessage) =>
       onerror: traceError,
     });
 
+const Paths = ({
+  source, destination, destinationAsset, destinationAmount,
+}) =>
+  getServerInstance()
+    .paths(source, destination, AssetInstance(destinationAsset), destinationAmount)
+    .call();
+
 module.exports = {
+  getAccount,
   paymentListener,
   Orderbook,
   OrderbookStream,
@@ -95,4 +108,5 @@ module.exports = {
   OffersStream,
   EffectsStream,
   PaymentStream,
+  Paths,
 };

@@ -17,37 +17,41 @@ const resolveAddress = (address) => {
 const validDestination = address =>
   resolveAddress(address).then(() => true).catch(() => false);
 
-const AssetInstance = asset => {
-  if(!asset) return null;
-  if(asset instanceof Asset || (asset.constructor && asset.constructor.name === 'Asset')) {
-    return asset;
-  }
-  if(asset.asset_type === 'native') {
-    return Asset.native();
-  }
-  return new Asset(asset.asset_code, asset.asset_issuer);
-};
-
-const AssetShortName = (rawAsset) => {
-  const asset = AssetInstance(rawAsset);
-
+const AssetShortName = (asset) => {
   if(asset.isNative()) {
     return 'XLM';
   }
   return asset.getCode();
 };
 
-const AssetUid = (rawAsset) => {
-  const asset = AssetInstance(rawAsset);
-
+const AssetUid = (asset) => {
+  let str = asset.getAssetType();
   if (asset.isNative()) {
-    return 'native';
+    return str;
   }
-  let str = 'custom:';
+  str += ':';
   str += asset.getCode();
   str += ':';
   str += asset.getIssuer();
   return str;
+};
+
+const AssetInstance = asset => {
+  if(!asset) return null;
+  let returnAsset;
+  if(asset instanceof Asset || (asset.constructor && asset.constructor.name === 'Asset')) {
+    returnAsset = asset;
+  }
+  else if(asset.asset_type === 'native') {
+    returnAsset = Asset.native();
+  } else {
+    returnAsset = new Asset(asset.asset_code, asset.asset_issuer);
+  }
+
+  returnAsset.uuid = AssetUid(returnAsset);
+  returnAsset.shortName = AssetShortName(returnAsset);
+
+  return returnAsset;
 };
 
 const KeypairInstance = keypair => {
@@ -86,8 +90,6 @@ const augmentAccount = account => Object.assign({},
   {
     balances: account.balances.map(b => Object.assign({}, b, {
       asset: AssetInstance(b),
-      asset_uuid: AssetUid(b),
-      asset_shortname: AssetShortName(b),
     })),
   });
 

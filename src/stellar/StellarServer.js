@@ -1,18 +1,11 @@
 const Stellar = require('stellar-sdk');
 const fetch = require('isomorphic-fetch');
 
-// import StellarOffline from './StellarOffline';
 const { augmentAccount } = require('./StellarTools');
 
 let Server;
 
-function traceError() {
-  // console.error(e);
-}
 const getServerInstance = () => Server;
-// if(process.env.NODE_ENV !== 'production') {
-//   return StellarOffline();
-// }
 
 const getAccount = accountId =>
   getServerInstance()
