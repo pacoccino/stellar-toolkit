@@ -2,6 +2,7 @@ const { isString, isNumber, isFunction } = require('lodash');
 const { Account, Memo, Operation, TransactionBuilder } = require('stellar-sdk');
 
 const Stellar = require('./StellarServer');
+const { getAccount } = require('./StellarServer');
 const { AssetInstance, KeypairInstance, AmountInstance } = require('./StellarTools');
 
 /**
@@ -50,28 +51,30 @@ const addMemo = (transactionBuilder, memo) => {
  * @param memo {Object}
  * @returns {Promise}
  */
-const sendTransaction = ({ operations, operation, memo }, authData) => {
+const sendTransaction = ({ operations, operation, memo }, rawKeypair) => {
   if(!authData.sourceAccount || !authData.keypair) {
     throw 'Invalid parameters';
   }
-  const keypair = KeypairInstance(authData.keypair);
-  const sourceAccount = authData.sourceAccount;
+  const keypair = KeypairInstance(rawKeypair);
   const sourceAddress = keypair.publicKey();
-  const sequenceNumber = sourceAccount.sequence;
-  const transAccount = new Account(sourceAddress, sequenceNumber);
 
-  const transactionBuilder = new TransactionBuilder(transAccount);
+  getAccount(sourceAddress).then(sourceAccount => {
+    const sequenceNumber = sourceAccount.sequence;
+    const transAccount = new Account(sourceAddress, sequenceNumber);
 
-  addOperations(transactionBuilder, { operations, operation });
-  addMemo(transactionBuilder, memo);
+    const transactionBuilder = new TransactionBuilder(transAccount);
 
-  const transaction = transactionBuilder.build();
-  transaction.sign(keypair);
+    addOperations(transactionBuilder, { operations, operation });
+    addMemo(transactionBuilder, memo);
 
-  return Stellar.getServerInstance().submitTransaction(transaction);
+    const transaction = transactionBuilder.build();
+    transaction.sign(keypair);
+
+    return Stellar.getServerInstance().submitTransaction(transaction);
+  });
 };
 
-const transactionLauncher = transactionInfo => authData => sendTransaction(transactionInfo, authData);
+const transactionLauncher = transactionInfo => keypair => sendTransaction(transactionInfo, keypair);
 
 const sendPayment = ({ asset, destination, amount, memo }) => {
   const operation = Operation.payment({

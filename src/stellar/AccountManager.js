@@ -35,16 +35,10 @@ const extractSeed = (account, password) => {
 
 const setAccountSeed = async (seed, password) => {
   const keypair = Keypair.fromSecret(seed);
-  const sourceAccount = await getAccount(keypair.publicKey());
   const encryptedSeed = encrypt(keypair.secret(), password);
   const seedData = chunkData(PASSWORD_PREFIX, encryptedSeed);
 
-  const launcher = manageData(seedData);
-  const authData = {
-    keypair,
-    sourceAccount
-  };
-  return launcher(authData);
+  return manageData(seedData)(keypair);
 };
 
 const createAccountEncrypted_test = async (password) => {
@@ -63,15 +57,10 @@ function createAccountEncrypted({
   const keypair = Keypair.random();
   const fundingKeypair = Keypair.fromSecret(fundingSeed);
 
-  return getAccount(fundingKeypair.publicKey())
-    .then(sourceAccount =>
-      createAccount({
-        destination: keypair.publicKey(),
-        amount: fundingInitial,
-      })({
-        sourceAccount,
-        keypair: fundingKeypair,
-      }))
+  return createAccount({
+    destination: keypair.publicKey(),
+    amount: fundingInitial,
+  })(fundingKeypair)
     .then(() => setAccountSeed(keypair.secret(), password))
     .then(() => keypair);
 }
