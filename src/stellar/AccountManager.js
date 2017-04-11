@@ -1,7 +1,7 @@
 const { Keypair } = require('stellar-sdk');
 const CryptoJS = require("crypto-js");
 
-const { manageData } = require('./StellarOperations');
+const { createAccount, manageData } = require('./StellarOperations');
 const { generateTestPair, getAccount } = require('./StellarServer');
 const { resolveAddress } = require('./StellarTools');
 const { ERRORS } = require('../helpers/errors');
@@ -47,13 +47,34 @@ const setAccountSeed = async (seed, password) => {
   return launcher(authData);
 };
 
-const createAccountEncrypted = async (password) => {
+const createAccountEncrypted_test = async (password) => {
   const keypair = await generateTestPair();
 
   await setAccountSeed(keypair.secret(), password);
 
   return keypair;
 };
+
+function createAccountEncrypted({
+  fundingSeed,
+  fundingIntial,
+  password,
+}) {
+  const keypair = Keypair.random();
+  const fundingKeypair = Keypair.fromSeed(fundingSeed);
+
+  return getAccount(fundingKeypair.publicKey())
+    .then(sourceAccount =>
+      createAccount({
+        destination: keypair.publicKey(),
+        amount: fundingIntial,
+      })({
+        sourceAccount,
+        keypair: fundingKeypair,
+      }))
+    .then(() => setAccountSeed(keypair.secret(), password))
+    .then(() => keypair);
+}
 
 // Resolve address (federation or account ID) and decrypt the seed in it
 const getKeypairFromLogin = async (address, password) => {
@@ -75,6 +96,7 @@ module.exports = {
   extractSeed,
   setAccountSeed,
   createAccountEncrypted,
+  createAccountEncrypted_test,
   getKeypairFromLogin,
   PASSWORD_PREFIX,
 };
