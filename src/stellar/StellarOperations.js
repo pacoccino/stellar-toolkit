@@ -74,16 +74,12 @@ const sendTransaction = ({ operations, operation, memo }, authData) => {
 const transactionLauncher = transactionInfo => authData => sendTransaction(transactionInfo, authData);
 
 const sendPayment = ({ asset, destination, amount, memo }) => {
-  try {
-    const operation = Operation.payment({
-      destination,
-      asset: AssetInstance(asset),
-      amount: AmountInstance(amount),
-    });
-    return transactionLauncher({ operation, memo });
-  } catch (e) {
-    return Promise.reject(e);
-  }
+  const operation = Operation.payment({
+    destination,
+    asset: AssetInstance(asset),
+    amount: AmountInstance(amount),
+  });
+  return transactionLauncher({ operation, memo });
 };
 
 const sendPathPayment = ({
@@ -94,81 +90,61 @@ const sendPathPayment = ({
                            max_amount,
                            memo,
                          }) => {
-  try {
-    const operation = Operation.pathPayment({
-      sendAsset: AssetInstance(asset_source),
-      sendMax: AmountInstance(max_amount),
-      destination,
-      destAsset: AssetInstance(asset_destination),
-      destAmount: AmountInstance(amount_destination),
-    });
-    return transactionLauncher({ operation, memo });
-  } catch (e) {
-    return Promise.reject(e);
-  }
+  const operation = Operation.pathPayment({
+    sendAsset: AssetInstance(asset_source),
+    sendMax: AmountInstance(max_amount),
+    destination,
+    destAsset: AssetInstance(asset_destination),
+    destAmount: AmountInstance(amount_destination),
+  });
+  return transactionLauncher({ operation, memo });
 };
 
 const changeTrust = ({ asset, limit }) => {
-  try {
-    const trustLimit = (isNumber(limit) || isString(limit)) ? AmountInstance(limit) : undefined;
-    const operation = Operation.changeTrust({
-      asset: AssetInstance(asset),
-      limit: trustLimit,
-    });
+  const trustLimit = (isNumber(limit) || isString(limit)) ? AmountInstance(limit) : undefined;
+  const operation = Operation.changeTrust({
+    asset: AssetInstance(asset),
+    limit: trustLimit,
+  });
 
-    return transactionLauncher({ operation });
-  } catch (e) {
-    return Promise.reject(e);
-  }
+  return transactionLauncher({ operation });
 };
 
 const manageOffer = ({ selling, buying, amount, price, passive, id }) => {
-  try {
-    const operations = [];
+  const operations = [];
 
-    const offerId = isNumber(id) ? id : 0;
-    const offer = {
-      selling: AssetInstance(selling),
-      buying: AssetInstance(buying),
-      amount: AmountInstance(amount),
-      price: AmountInstance(price),
-      offerId,
-    };
-    if (passive) {
-      operations.push(Operation.createPassiveOffer(offer));
-    } else {
-      operations.push(Operation.manageOffer(offer));
-    }
-
-    return transactionLauncher({ operations });
-  } catch (e) {
-    return Promise.reject(e);
+  const offerId = isNumber(id) ? id : 0;
+  const offer = {
+    selling: AssetInstance(selling),
+    buying: AssetInstance(buying),
+    amount: AmountInstance(amount),
+    price: AmountInstance(price),
+    offerId,
+  };
+  if (passive) {
+    operations.push(Operation.createPassiveOffer(offer));
+  } else {
+    operations.push(Operation.manageOffer(offer));
   }
+
+  return transactionLauncher({ operations });
 };
 
 const createAccount = ({ destination, amount }) => {
-  try {
-    const operation = Operation.createAccount({
-      destination,
-      startingBalance: amount,
-    });
+  const operation = Operation.createAccount({
+    destination,
+    startingBalance: AmountInstance(amount),
+  });
 
-    return transactionLauncher({ operation });
-  } catch (e) {
-    return Promise.reject(e);
-  }
+  return transactionLauncher({ operation });
 };
 
 const accountMerge = ({ destination }) => {
-  try {
-    const operation = Operation.accountMerge({
-      destination,
-    });
+  const operation = Operation.accountMerge({
+    destination,
+  });
 
-    return transactionLauncher({ operation });
-  } catch (e) {
-    return Promise.reject(e);
-  }
+  return transactionLauncher({ operation });
 };
 
 const manageData = (data) => {
