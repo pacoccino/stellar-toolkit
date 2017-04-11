@@ -61,7 +61,7 @@ function createAccountEncrypted({
   password,
 }) {
   const keypair = Keypair.random();
-  const fundingKeypair = Keypair.fromSeed(fundingSeed);
+  const fundingKeypair = Keypair.fromSecret(fundingSeed);
 
   return getAccount(fundingKeypair.publicKey())
     .then(sourceAccount =>
