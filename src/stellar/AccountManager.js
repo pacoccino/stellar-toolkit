@@ -57,7 +57,7 @@ const createAccountEncrypted_test = async (password) => {
 
 function createAccountEncrypted({
   fundingSeed,
-  fundingIntial,
+  fundingInitial,
   password,
 }) {
   const keypair = Keypair.random();
@@ -67,7 +67,7 @@ function createAccountEncrypted({
     .then(sourceAccount =>
       createAccount({
         destination: keypair.publicKey(),
-        amount: fundingIntial,
+        amount: fundingInitial,
       })({
         sourceAccount,
         keypair: fundingKeypair,
