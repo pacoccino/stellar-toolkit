@@ -52,13 +52,10 @@ const addMemo = (transactionBuilder, memo) => {
  * @returns {Promise}
  */
 const sendTransaction = ({ operations, operation, memo }, rawKeypair) => {
-  if(!authData.sourceAccount || !authData.keypair) {
-    throw 'Invalid parameters';
-  }
   const keypair = KeypairInstance(rawKeypair);
   const sourceAddress = keypair.publicKey();
 
-  getAccount(sourceAddress).then(sourceAccount => {
+  return getAccount(sourceAddress).then(sourceAccount => {
     const sequenceNumber = sourceAccount.sequence;
     const transAccount = new Account(sourceAddress, sequenceNumber);
 
