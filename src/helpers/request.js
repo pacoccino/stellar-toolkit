@@ -22,6 +22,9 @@ function request(o) {
 
   return fetch(uri, options)
     .then(response => {
+      if(!response.ok) {
+        throw response;
+      }
       if(response.headers.get('Content-Type').includes('application/json')) {
         return response.json();
       } else {
