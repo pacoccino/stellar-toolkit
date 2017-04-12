@@ -14,10 +14,6 @@ const getAccount = accountId =>
 
 const switchNetwork = (network) => {
   switch (network) {
-    case 'perso':
-      Server = new Stellar.Server('http://192.168.1.67:8000', { allowHttp: true });
-      Stellar.Network.useTestNetwork();
-      break;
     case 'public':
       Server = new Stellar.Server('https://horizon.stellar.org');
       Stellar.Network.usePublicNetwork();
@@ -29,6 +25,15 @@ const switchNetwork = (network) => {
       break;
   }
 };
+
+function setServer({ url, type = 'test', options = {} }) {
+  Server = new Stellar.Server(url, options);
+  if(type === 'public') {
+    Stellar.Network.usePublicNetwork();
+  } else {
+    Stellar.Network.useTestNetwork();
+  }
+}
 
 async function generateTestPair() {
   const pair = Stellar.Keypair.random();
@@ -44,6 +49,8 @@ async function generateTestPair() {
 switchNetwork();
 
 module.exports = {
+  switchNetwork,
+  setServer,
   getServerInstance,
   getAccount,
   generateTestPair,
