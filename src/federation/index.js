@@ -1,3 +1,4 @@
+const { Keypair } = require('stellar-sdk');
 const request = require('../helpers/request');
 const { sign } = require('../stellar/DataManager');
 
@@ -38,15 +39,21 @@ function federationKeypair({ q, password }) {
   });
 }
 
-function federationCreate({ stellar_address, password }) {
+function federationCreate({ stellar_address }) {
+  const keypair = Keypair.random();
+  const body = {
+    stellar_address,
+    account_id: keypair.publicKey(),
+  };
+  const signature = sign(body, keypair.secret());
   return request({
     url: federationUrl,
     method: 'POST',
-    body: {
-      stellar_address,
-      password,
+    body,
+    headers: {
+      signature,
     },
-  });
+  }).then(() => keypair);
 }
 
 function federationRegister({ stellar_address, keypair }) {
