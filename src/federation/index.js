@@ -39,7 +39,7 @@ function federationKeypair({ q, password }) {
   });
 }
 
-function federationCreate({ stellar_address }) {
+function federationCreate(stellar_address) {
   const keypair = Keypair.random();
   const body = {
     stellar_address,

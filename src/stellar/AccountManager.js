@@ -33,8 +33,7 @@ const extractSeed = (account, password) => {
   }
 };
 
-const setAccountSeed = async (seed, password) => {
-  const keypair = Keypair.fromSecret(seed);
+const setAccountSeed = async (keypair, password) => {
   const encryptedSeed = encrypt(keypair.secret(), password);
   const seedData = chunkData(PASSWORD_PREFIX, encryptedSeed);
 
@@ -44,7 +43,7 @@ const setAccountSeed = async (seed, password) => {
 const createAccountEncrypted_test = async (password) => {
   const keypair = await generateTestPair();
 
-  await setAccountSeed(keypair.secret(), password);
+  await setAccountSeed(keypair, password);
 
   return keypair;
 };
@@ -61,7 +60,7 @@ function createAccountEncrypted({
     destination: keypair.publicKey(),
     amount: fundingInitial,
   })(fundingKeypair)
-    .then(() => setAccountSeed(keypair.secret(), password))
+    .then(() => setAccountSeed(keypair, password))
     .then(() => keypair);
 }
 
