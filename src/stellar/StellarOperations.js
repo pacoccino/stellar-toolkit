@@ -43,12 +43,10 @@ const addMemo = (transactionBuilder, memo) => {
 /**
  * Build and send a transacton
  *
- * @param authData {Object} Source account and signers data
- * @param authData.keypair {Keypair} keypair of sender and signer
- * @param authData.sourceAccount {Account} Account of sender
  * @param operations {Operation[]}
  * @param operation {Operation}
  * @param memo {Object}
+ * @param {Keypair} rawKeypair keypair to sign the transaction with
  * @returns {Promise}
  */
 const sendTransaction = ({ operations, operation, memo }, rawKeypair) => {
