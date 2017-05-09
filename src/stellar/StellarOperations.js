@@ -160,7 +160,7 @@ const manageData = (data) => {
 const allowTrust = ({ trustor, assetCode, authorize }) => {
   const operation = Operation.allowTrust({
     trustor,
-    asset_code,
+    assetCode,
     authorize
   });
 
