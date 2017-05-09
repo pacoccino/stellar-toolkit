@@ -157,6 +157,16 @@ const manageData = (data) => {
   return transactionLauncher({ operations });
 };
 
+const allowTrust = ({ trustor, assetCode, authorize }) => {
+  const operation = Operation.allowTrust({
+    trustor,
+    asset_code,
+    authorize
+  });
+
+  return transactionLauncher({ operation });
+};
+
 module.exports = {
   sendTransaction,
   sendPayment,
@@ -165,5 +175,6 @@ module.exports = {
   manageOffer,
   createAccount,
   accountMerge,
+  allowTrust,
   manageData,
 };
