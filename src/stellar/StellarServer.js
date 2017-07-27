@@ -35,8 +35,13 @@ function setServer({ url, type = 'test', options = {} }) {
   }
 }
 
-async function generateTestPair() {
-  const pair = Stellar.Keypair.random();
+async function generateTestPair(seed) {
+  let pair = null;
+  if(seed) {
+    pair = Stellar.Keypair.fromSecret(seed);
+  } else {
+    pair = Stellar.Keypair.random();
+  }
 
   try {
     await fetch(`https://horizon-testnet.stellar.org/friendbot?addr=${pair.publicKey()}`);
