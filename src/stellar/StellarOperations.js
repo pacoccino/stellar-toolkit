@@ -1,3 +1,4 @@
+const async = require('async');
 const { isString, isNumber, isFunction } = require('lodash');
 const { Account, Memo, Operation, TransactionBuilder } = require('stellar-sdk');
 
@@ -40,6 +41,8 @@ const addMemo = (transactionBuilder, memo) => {
   }
 };
 
+const queues = {};
+
 /**
  * Build and send a transacton
  *
@@ -55,19 +58,44 @@ const sendTransaction = ({ operations, operation, memo }, rawKeypair) => {
   const keypair = KeypairInstance(rawKeypair);
   const sourceAddress = keypair.publicKey();
 
-  return getAccount(sourceAddress).then(sourceAccount => {
-    const sequenceNumber = sourceAccount.sequence;
-    const transAccount = new Account(sourceAddress, sequenceNumber);
+  if(!queues.sourceAddress) {
+    queues.sourceAddress = async.queue(async (task, callback) => {
+      try {
+        const result = await task.fn();
+        task.onEnd(null, result);
+        callback();
+      } catch(e) {
+        task.onEnd(e);
+        callback(e);
+      }
+    }, 1);
+  }
 
-    const transactionBuilder = new TransactionBuilder(transAccount);
+  return new Promise((resolve, reject) => {
+    queues.sourceAddress.push({
+      fn: () => getAccount(sourceAddress)
+        .then(sourceAccount => {
+          const sequenceNumber = sourceAccount.sequence;
+          const transAccount = new Account(sourceAddress, sequenceNumber);
 
-    addOperations(transactionBuilder, { operations, operation });
-    addMemo(transactionBuilder, memo);
+          const transactionBuilder = new TransactionBuilder(transAccount);
 
-    const transaction = transactionBuilder.build();
-    transaction.sign(keypair);
+          addOperations(transactionBuilder, { operations, operation });
+          addMemo(transactionBuilder, memo);
 
-    return Stellar.getServerInstance().submitTransaction(transaction);
+          const transaction = transactionBuilder.build();
+          transaction.sign(keypair);
+
+          return Stellar.getServerInstance().submitTransaction(transaction);
+        }),
+      onEnd: (e, result) => {
+        if(e) {
+          reject(e);
+        } else {
+          resolve(result);
+        }
+      }
+    });
   });
 };
 
@@ -83,13 +111,13 @@ const sendPayment = ({ asset, destination, amount, memo }) => {
 };
 
 const sendPathPayment = ({
-  asset_source,
-  asset_destination,
-  amount_destination,
-  destination,
-  max_amount,
-  memo,
-}) => {
+                           asset_source,
+                           asset_destination,
+                           amount_destination,
+                           destination,
+                           max_amount,
+                           memo,
+                         }) => {
   const operation = Operation.pathPayment({
     sendAsset: AssetInstance(asset_source),
     sendMax: AmountInstance(max_amount),
