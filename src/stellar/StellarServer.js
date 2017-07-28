@@ -52,6 +52,15 @@ async function generateTestPair(publicKeyOpts) {
   }
 }
 
+async function isAccountExists(accountId) {
+  try {
+    await getAccount(accountId);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
 switchNetwork();
 
 module.exports = {
@@ -60,4 +69,5 @@ module.exports = {
   getServerInstance,
   getAccount,
   generateTestPair,
+  isAccountExists,
 };
