@@ -36,11 +36,12 @@ function setServer({ url, type = 'test', options = {} }) {
 }
 
 async function generateTestPair(publicKeyOpts) {
+  let pair = null;
   let publicKey = null;
   if(publicKeyOpts) {
     publicKey = publicKeyOpts;
   } else {
-    const pair = Stellar.Keypair.random();
+    pair = Stellar.Keypair.random();
     publicKey = pair.publicKey();
   }
 
