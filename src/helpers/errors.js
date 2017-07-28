@@ -1,4 +1,4 @@
-const CustomError = (code, message) => (detail) => {
+const StellarError = (code, message) => (detail) => {
   return {
     code,
     message,
@@ -8,14 +8,14 @@ const CustomError = (code, message) => (detail) => {
 };
 
 const ERRORS = {
-  ACCOUNT_NO_SEEDDATA: CustomError(422, 'Account does not hold encrypted seed in data.'),
-  INVALID_PASSWORD:    CustomError(401, 'Bad credentials'),
-  ACCOUNT_NOT_EXIST:   CustomError(404, 'Account does not exists'),
-  BAD_PARAMETERS:      CustomError(400, 'Bad parameters'),
-  UNAUTHORIZED:        CustomError(403, 'Unauthorized'),
+  ACCOUNT_NO_SEEDDATA: StellarError(422, 'Account does not hold encrypted seed in data.'),
+  INVALID_PASSWORD:    StellarError(401, 'Bad credentials'),
+  ACCOUNT_NOT_EXIST:   StellarError(404, 'Account does not exists'),
+  BAD_PARAMETERS:      StellarError(400, 'Bad parameters'),
+  UNAUTHORIZED:        StellarError(403, 'Unauthorized'),
 };
 
 module.exports = {
   ERRORS,
-  CustomError,
+  StellarError,
 };

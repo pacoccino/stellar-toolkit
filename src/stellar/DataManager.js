@@ -6,6 +6,12 @@ const { splitBuffer } = require('../helpers/bufferTool');
 const ENCODING = 'base64';
 const CHUNK_SIZE = 64;
 
+/**
+ * Sign a data with a keypair
+ * @param dataToSign
+ * @param secret
+ * @return {string}
+ */
 const sign = (dataToSign, secret) => {
   const json = JSON.stringify(dataToSign);
   const dataBuffer = Buffer.from(json);
@@ -16,6 +22,13 @@ const sign = (dataToSign, secret) => {
   return signatureBuffer.toString(ENCODING);
 };
 
+/**
+ * Verify a data with a keypair
+ * @param data
+ * @param accountId
+ * @param signature
+ * @return {boolean}
+ */
 const verify = (data, accountId, signature) => {
   if(!data || !signature) {
     throw ERRORS.BAD_PARAMETERS('need data and signature');
@@ -34,6 +47,13 @@ const verify = (data, accountId, signature) => {
   return true;
 };
 
+/**
+ * Split a string/buffer in an object of size-boxed encoded strings
+ * @param prefix - Prefix of the object keys
+ * @param {String} data
+ * @param chunkSize - Size of the chunks (bytes)
+ * @return {Object} splittedData
+ */
 const chunkData = (prefix, data, chunkSize = CHUNK_SIZE) => {
   const buffer = Buffer.from(data);
   return splitBuffer(buffer, chunkSize).reduce((acc, chunk) =>
@@ -42,6 +62,12 @@ const chunkData = (prefix, data, chunkSize = CHUNK_SIZE) => {
     }), {});
 };
 
+/**
+ *
+ * @param prefix
+ * @param {Object} data - Object of string encoded data
+ * @return {String} gluedData
+ */
 const glueData = (prefix, data) => {
   const chunkedData = Object.keys(data)
     .filter(key => (key.indexOf(prefix) === 0))

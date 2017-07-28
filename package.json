@@ -2,7 +2,7 @@
   "name": "stellar-toolkit",
   "version": "0.5.0",
   "description": "High-level Stellar SDK",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "npm run build -- -w",
     "build": "babel src --presets babel-preset-latest --out-dir dist",
@@ -15,6 +15,7 @@
   "dependencies": {
     "async": "^2.5.0",
     "crypto-js": "^3.1.9-1",
+    "babel-runtime": "^6.23.0",
     "decimal.js": "^7.1.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
