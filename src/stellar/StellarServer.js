@@ -35,16 +35,17 @@ function setServer({ url, type = 'test', options = {} }) {
   }
 }
 
-async function generateTestPair(seed) {
-  let pair = null;
-  if(seed) {
-    pair = Stellar.Keypair.fromSecret(seed);
+async function generateTestPair(publicKeyOpts) {
+  let publicKey = null;
+  if(publicKeyOpts) {
+    publicKey = publicKeyOpts;
   } else {
-    pair = Stellar.Keypair.random();
+    const pair = Stellar.Keypair.random();
+    publicKey = pair.publicKey();
   }
 
   try {
-    await fetch(`https://horizon-testnet.stellar.org/friendbot?addr=${pair.publicKey()}`);
+    await fetch(`https://horizon-testnet.stellar.org/friendbot?addr=${publicKey}`);
     return pair;
   } catch (e) {
     throw e;
