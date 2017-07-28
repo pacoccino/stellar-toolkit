@@ -1,6 +1,6 @@
 {
   "name": "stellar-toolkit",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "High-level Stellar SDK",
   "main": "src/index.js",
   "scripts": {
