@@ -1,3 +1,5 @@
+> THIS LIBRARY IS UNMAINTAINED AND OUTDATED, PLEASE DO NOT USE 
+
 # Stellar Toolkit
 
 This project is a library on top of stellar aimed to help using the Stellar network.
