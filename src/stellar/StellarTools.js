@@ -1,5 +1,5 @@
 const { Asset, FederationServer, StrKey, Keypair } = require('stellar-sdk');
-const Decimal = require('decimal.js');
+const Decimal = require('decimal.js/decimal.js');
 
 const STROOP = 0.0000001;
 
