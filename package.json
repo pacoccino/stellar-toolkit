@@ -20,7 +20,7 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "qs": "^6.4.0",
-    "stellar-sdk": "^0.7.3",
+    "stellar-sdk": "^8.2.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
@@ -33,6 +33,6 @@
     "sinon": "^2.1.0"
   },
   "peerDependencies": {
-    "stellar-sdk": "^0.7.3"
+    "stellar-sdk": "^8.2.3"
   }
 }
