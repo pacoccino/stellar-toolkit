@@ -13,7 +13,7 @@
   "author": "Pacien Boisson <pakokrew@gmail.com> (https://ngfar.io)",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^3.2.2",
     "crypto-js": "^3.1.9-1",
     "babel-runtime": "^6.23.0",
     "decimal.js": "^7.1.1",
